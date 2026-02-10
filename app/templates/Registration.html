@@ -13,28 +13,37 @@
                     <form action="{% url 'registration' %}" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
 
-                        <!-- Name -->
+                       
                         <div class="mb-3">
                             <label class="form-label">Full Name</label>
-                            <input type="text" name="name" class="form-control" placeholder="Enter full name">
+                            <input type="text" name="name" class="form-control" placeholder="Enter full name" value="{{data.name}}">
                         </div>
 
-                        <!-- Email -->
+
+
+                        <h5 style="color: red;">{{Emsg}}</h5>
+                        
                         <div class="mb-3">
                             <label class="form-label">Email address</label>
-                            <input type="email" name="email" class="form-control" placeholder="name@example.com">
+                            <input type="email" name="email" class="form-control" placeholder="name@example.com" value="{{data.email}}">
                         </div>
-
-                        <!-- Password -->
+                       <h5 style="color: red;">{{pmsg}}</h5>
+                       
                         <div class="mb-3">
                             <label class="form-label">Password</label>
+                            <input type="password" name="cpassword" class="form-control" >
+                        </div>
+
+                        
+                         <div class="mb-3">
+                            <label class="form-label">CPassword</label>
                             <input type="password" name="password" class="form-control">
                         </div>
 
                         <!-- Contact -->
                         <div class="mb-3">
                             <label class="form-label">Mobile Number</label>
-                            <input type="tel" name="number" class="form-control">
+                            <input type="tel" name="number" class="form-control" value="{{data.number}}">
                         </div>
 
                        

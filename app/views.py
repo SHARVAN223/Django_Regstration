@@ -13,21 +13,31 @@ def registration(req):
         e=req.POST.get('email')
         c=req.POST.get('number')
         p = req.POST.get('password')
+        cp = req.POST.get('cpassword')
         q = req.POST.getlist('qualification')
         g= req.POST.get('gender')
         s= req.POST.get('state')
-    
-        Employee.objects.create(
-            Name = n,
-            Email = e, 
-            Password = p,
-            Contact = c,
-            Qualification = q,
-            Gender = g,
-            State = s
-        )
-        return redirect('login')
-   
+        user = Employee.objects.filter(Email=e)
+        if user :
+          msg="Email id already exists!"
+          return render(req,'Registration.html',{'Emsg':msg})
+        else:
+          if p==cp:    
+              Employee.objects.create(
+                Name = n,
+                Email = e, 
+                Password = p,
+                Cpassword=cp,
+                Contact = c,
+                Qualification = q,
+                Gender = g,
+                State = s
+              )
+              return redirect('login')
+          else:
+              userdata={'name':n,'email':e,'number':c}
+              msg="Password & Confirm_password not matched"
+              return render(req,'Registration.html',{'pmsg':msg,'data':userdata})
    return render(req,'Registration.html')
 
 def login(req):
