@@ -15,3 +15,9 @@ class Employee(models.Model):
 
     def __str__(self):
         return str(self.Contact) + " " +self.Name
+    
+    
+class Department(models.Model):
+    Dep_name= models.CharField(max_length=30)
+    Dep_desc= models.CharField(max_length=100)
+    Dep_head=models.CharField(max_length=30)

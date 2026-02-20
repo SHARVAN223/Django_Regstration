@@ -24,4 +24,11 @@ urlpatterns = [
     path('', landing, name='landing'),
     path('registration/',registration , name='registration'),
     path('login/',login,name='login'),
+    path('userdashboard/', userdashboard, name='userdashboard'),
+    path('admindashboard/',admindashboard, name='admindashboard'),
+    path('add_dept/',add_dept,name='add_dept'),
+    path('show_dept/',show_dept,name='show_dept'),
+    path('save_dept/',save_dept,name='save_dept'),
+    path('logout/',logout,name='logout'),
+ 
 ]

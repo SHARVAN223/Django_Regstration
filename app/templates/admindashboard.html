@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    
+         
+        .sidebar {
+            height: 100vh;
+            background: #212529;
+        }
+        .sidebar a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        .sidebar a:hover {
+            background: #0d6efd;
+        }
+        .content-box {
+          background: white;
+          border-radius: 10px;
+          padding: 20px;
+          box-shadow: 0 0 10px rgba(0,0,0,0.1);
+          min-height: 400px;
+        }
+  </style>
+</head>
+
+<body>
+
+<!-- Top Navbar -->
+<nav class="navbar navbar-dark bg-dark px-4">
+  <span class="navbar-brand">Welcome Admin</span>
+  <button class="btn btn-danger">Logout</button>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+
+    <!-- Sidebar -->
+    <div class="col-md-3 col-lg-2 sidebar p-3">
+      
+
+      <a href="{% url 'add_dept' %}">Add Department</a>
+      <a href="{% url 'show_dept' %}">Show Department</a>
+      <a href="#">Add Employee</a>
+      <a href="#">Show Employee</a>
+      <a href="#">Employee Query</a>
+    </div>
+
+    
+    <div class="col-md-9 col-lg-10 p-4">
+      <div class="content-box">
+         
+        
+        {% if messages %}
+            {% for i in messages %}
+                {{i}}
+            {% endfor %}    
+        {% endif %}
+        {% if add_dep %}
+                <div class="container mt-5">
+                <div class="row justify-content-center">
+                <div class="col-md-6">
+
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">Add Department</h4>
+                </div>
+
+                <div class="card-body">
+                    <form action="{% url 'save_dept' %}" method="POST">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Department Name</label>
+                            <input type="text" name="dep_name" class="form-control" placeholder="Enter department name" required>
+                        </div>
+
+                          
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea name="dep_desc" class="form-control" rows="4" placeholder="Enter department description" required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Head of Department</label>
+                            <input type="text" name="dep_head" class="form-control" placeholder="Enter HOD name" required>
+                        </div>
+
+                       
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                Save Department
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                </div>
+
+             </div>
+              </div>
+                </div>
+
+        {% elif  show_dep %}
+                <div class="container mt-5">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                        <h4 class="">Department List</h4>
+                   </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered align-middle">
+                                <thead class="table-dark text-center">
+                                    <tr>
+                                        <th>S.NO</th>
+                                        <th>Department Name</th>
+                                        <th>Code</th>
+                                        <th>Head</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                    
+                                </tbody>
+                            </table>
+                </div>
+           
+                    <div class="alert alert-warning text-center">
+                        No departments found.
+                    </div>
+        
+                </div>
+                </div>
+        {% endif %}
+
+</div>         
+
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
