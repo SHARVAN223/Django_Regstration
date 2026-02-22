@@ -34,11 +34,26 @@
           min-height: 400px;
         }
   </style>
+
+
+
+  <style>
+        body{
+            background-color: #f4f6f9;
+        }
+        .card{
+            border-radius: 15px;
+        }
+        .card-header{
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+    </style>
 </head>
 
 <body>
 
-<!-- Top Navbar -->
+
 <nav class="navbar navbar-dark bg-dark px-4">
   <span class="navbar-brand">Welcome Admin</span>
   <button class="btn btn-danger">Logout</button>
@@ -53,8 +68,8 @@
 
       <a href="{% url 'add_dept' %}">Add Department</a>
       <a href="{% url 'show_dept' %}">Show Department</a>
-      <a href="#">Add Employee</a>
-      <a href="#">Show Employee</a>
+      <a href="{% url 'add_emp' %}">Add Employee</a>
+      <a href="{% url 'show_emp' %}">Show Employee</a>
       <a href="#">Employee Query</a>
     </div>
 
@@ -116,9 +131,9 @@
         {% elif  show_dep %}
                 <div class="container mt-5">
                     <div class="card shadow-lg border-0">
-                        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                        {% comment %} <div class=" d-flex justify-content-between align-items-center"> {% endcomment %}
                         <h4 class="">Department List</h4>
-                   </div>
+                   </div> <br>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-hover table-bordered align-middle">
@@ -126,22 +141,134 @@
                                     <tr>
                                         <th>S.NO</th>
                                         <th>Department Name</th>
-                                        <th>Code</th>
-                                        <th>Head</th>
                                         <th>Description</th>
+                                        <th>Head</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
                                     </tr>
                                 </thead>
-                    
+                                <tbody>
+                                    
+                                    {% for i in all_dept %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{i.Dep_n}}</td>
+                                        <td>{{i.Dep_d}}</td>
+                                        <td>{{i.Dep_h}}</td>
+                                        <td><a href=""><button>Edit</button></a></td>
+                                        <td><a href=""><button>Delete</button></a></td>
+                                    </tr> 
+                                    {% endfor %}
                                 </tbody>
+                                
                             </table>
                 </div>
-           
-                    <div class="alert alert-warning text-center">
-                        No departments found.
+            
+        {% elif add_emp %}    
+                    <div class="container mt-5">
+                        <div class="row justify-content-center">
+                                <div class="col-md-6">
+                        <div class="card shadow-lg">
+                
+                    <div class="card-header bg-primary text-white text-center">
+                        <h4 class="mb-0">Add Employee</h4>
                     </div>
-        
+
+                <div class="card-body">
+
+                    <form action="{% url 'save_emp' %}" method="POST" >
+                        {% csrf_token %}
+                        
+                        <!-- Employee Name -->
+                        <div class="mb-3">
+                            <label class="form-label">Employee Name</label>
+                            <input type="text" name="emp_name" class="form-control" placeholder="Enter employee name" required>
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" name="emp_email" class="form-control" placeholder="Enter email address" required>
+                        </div>
+
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Contact Number</label>
+                            <input type="tel" name="emp_contact" class="form-control" placeholder="Enter contact number" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Department</label>
+                            <select name="emp_dept" class="form-select" required>
+                                <option value="">-- Select Department --</option>
+                                {% for i in all_dept %}
+                                <option >{{ i.Dep_n }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Employee Code -->
+                        <div class="mb-3">
+                            <label class="form-label">Employee Code</label>
+                            <input type="text" name="emp_code" class="form-control" placeholder="Enter employee code" required>
+                        </div>
+
+                        <!-- Employee Image -->
+                        <div class="mb-3">
+                            <label class="form-label">Upload Image</label>
+                            <input type="file" name="emp_image" class="form-control">
+                        </div>
+
+                        <!-- Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                Add Employee
+                            </button>
+                        </div>
+
+                    </form>    
                 </div>
-                </div>
+        {% elif show_emp %}
+                <div class="container mt-5">
+                    <div class="card shadow-lg border-0">
+                        {% comment %} <div class=" d-flex justify-content-between align-items-center"> {% endcomment %}
+                        <h4 class="">Employee List</h4>
+                   </div> <br>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered align-middle">
+                                <thead class="table-dark text-center">
+                                    <tr>
+                                        <th>S.NO</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Contact</th>
+                                        <th>Department</th>
+                                        <th>Code</th>
+                                        <th>Image</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    {% for i in all_emp %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{i.Name}}</td>
+                                        <td>{{i.Email}}</td>
+                                        <td>{{i.Contact}}</td>
+                                        <td>{{i.Dept}}</td>
+                                        <td>{{i.Code}}</td>
+                                        <td>{{i.Image}}</td>
+                                        <td><a href=""><button>Edit</button></a></td>
+                                        <td><a href=""><button>Delete</button></a></td>
+                                    </tr> 
+                                    {% endfor %}
+                                </tbody>
+                                
+                            </table>
+                </div> 
         {% endif %}
 
 </div>         

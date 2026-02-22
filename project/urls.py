@@ -29,6 +29,9 @@ urlpatterns = [
     path('add_dept/',add_dept,name='add_dept'),
     path('show_dept/',show_dept,name='show_dept'),
     path('save_dept/',save_dept,name='save_dept'),
+    path('add_emp/',add_emp,name='add_emp'),
+    path('show_emp/',show_emp,name='show_emp'),
+    path('save_emp/',save_emp,name='save_emp'),
     path('logout/',logout,name='logout'),
  
 ]

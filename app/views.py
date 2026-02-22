@@ -2,6 +2,8 @@ from django.shortcuts import render,redirect
 from .models import Employee
 from .models import Department
 from django .contrib import messages
+from django.core.mail import send_mail
+
 
 # Create your views here.
 
@@ -95,7 +97,8 @@ def add_dept(req):
 def show_dept(req):
    if 'a_data'in req.session:
       a_data = req.session.get('a_data')
-      return render(req,'admindashboard.html',{'data':a_data, 'show_dep':True})
+      all_dept = Department.objects.all()
+      return render(req,'admindashboard.html',{'data':a_data, 'show_dep':True,'all_dept':all_dept})
    else:
       return redirect('login')
 
@@ -105,19 +108,65 @@ def save_dept(req):
          dn = req.POST.get('dep_name')
          dd = req.POST.get('dep_desc')
          dh = req.POST.get('dep_head')
-         dept = Department.objects.filter(Dep_name=dn)
+         dept = Department.objects.filter(Dep_n=dn)
          if dept:
             messages.warning(req,'Department already exist')
             a_data = req.session.get('a_data')
             return render(req,'admindashboard.html',{'data':a_data , 'add_dep':True})
          else:
-            Department.objects.create(Dep_name=dn,Dep_desc=dd,Dep_head=dh)
+            Department.objects.create(Dep_n=dn,Dep_d=dd,Dep_h=dh)
             messages.success(req, "Department Created")
             a_data = req.session.get('a_data')
             return render(req, 'admindashboard.html',{'data':a_data , 'add_dep':True})
    else:
       return redirect('login')
 
+
+def add_emp(req):
+   if 'a_data'in req.session:
+         a_data = req.session.get('a_data')
+         all_dept = Department.objects.all()
+         return render(req,'admindashboard.html',{'data':a_data, 'add_emp':True , 'all_dept':all_dept})
+   else:
+      return redirect('login')
+
+def save_emp(req):
+   if 'a_data' in req.session:
+      if req.method == 'POST':
+         en = req.POST.get('emp_name')
+         ee = req.POST.get('emp_email')
+         ec = req.POST.get('emp_contact')
+         ed = req.POST.get('emp_dept')
+         ecode = req.POST.get('emp_code')
+         ei = req.POST.get('emp_image')
+         emp = Employee.objects.filter(Email=ee)
+         if emp:
+            messages.warning(req,'email already exist')
+            a_data = req.session.get('a_data')
+            all_dept = Department.objects.all()
+            return render(req,'admindashboard.html',{'data':a_data,'add_emp':True,'all_dept':all_dept})
+         else:
+            Employee.objects.create(Name=en,Email=ee,Contact=ec,Image=ei,Code=ecode,Dept=ed)
+            send_mail('email from admin',
+                              f'Employee information is Name:{en},Email:{ee},Contact:{ec},Department:{ed},Code:{ecode}',
+                              'sharvan70458@gmail.com',
+                              [ee],
+                              fail_silently=False,)
+            messages.success(req, "Employee Created")
+            a_data = req.session.get('a_data')
+            all_dept = Department.objects.all()
+            return render(req, 'admindashboard.html',{'data':a_data , 'add_emp':True , 'all_dept':all_dept})
+   else:
+      return redirect('login')
+
+def show_emp(req):
+   if 'a_data'in req.session:
+      a_data = req.session.get('a_data')
+      all_emp = Employee.objects.all()
+      return render(req,'admindashboard.html',{'data':a_data, 'show_emp':True,'all_emp':all_emp})
+   else:
+      return redirect('login')
+   
 
 def logout(req):
    if 'user_id' in req.session:
