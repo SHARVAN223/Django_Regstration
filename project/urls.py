@@ -18,13 +18,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from app.views import *
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', landing, name='landing'),
     path('registration/',registration , name='registration'),
     path('login/',login,name='login'),
-    path('userdashboard/', userdashboard, name='userdashboard'),
+    # path('userdashboard/', userdashboard, name='userdashboard'),
     path('admindashboard/',admindashboard, name='admindashboard'),
     path('add_dept/',add_dept,name='add_dept'),
     path('show_dept/',show_dept,name='show_dept'),
@@ -32,6 +34,9 @@ urlpatterns = [
     path('add_emp/',add_emp,name='add_emp'),
     path('show_emp/',show_emp,name='show_emp'),
     path('save_emp/',save_emp,name='save_emp'),
+    path('employeedashboard/',employeedashboard,name='employeedashboard'),
+    path('profile/',profile,name='profile'),
+    path('setting/',setting,name='setting'),
+    path('Query/',Query,name='Query'),
     path('logout/',logout,name='logout'),
- 
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

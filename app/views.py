@@ -58,34 +58,48 @@ def login(req):
             req.session['a_data']=a_data
             return redirect('admindashboard')
      else:
-         user = Employee.objects.filter(Email=e)
-         if not user:
-            msg = "Register first"
-            return redirect('Registration',{'Rmsg':msg})
-         else:
-            userdata = Employee.objects.get(Email=e)
-            if p == userdata.Password:
-               req.session['user_id']=userdata.id
-               return redirect('userdashboard')
+         employee = Employee.objects.filter(Email=e)
+         if employee:
+            emp_data = Employee.objects.get(Email=e)
+            if p == emp_data.Code:
+               req.session['emp_id'] = emp_data.id
+               return redirect('employeedashboard')
             else:
-               msg = 'Email & password not match'
-               return render(req,'login.html',{'x':msg})
+               messages.warning(req,'email & password not match')
+               return redirect('login')
+         else:
+           messages.warning(req,'Employee not exist in our company')
+           return redirect('login')
+         #   user = Employee.objects.filter(Email=e)
+         # if not user:
+         #    msg = "Register first"
+         #    return redirect('Registration',{'Rmsg':msg})
+         # else:
+         #    userdata = Employee.objects.get(Email=e)
+         #    if p == userdata.Password:
+         #       req.session['user_id']=userdata.id
+         #       return redirect('userdashboard')
+         #    else:
+         #       msg = 'Email & password not match'
+         #       return render(req,'login.html',{'x':msg}) 
   return render(req,'login.html')
      
 
-def userdashboard(req):
-   if 'user_id' in req.session:
-      id = req.session.get('user_id')
-      userdata = Employee.objects.get(id = id)
-      return render(req, 'userdashboard.html',{'data':userdata})
-   return redirect('login')  
+
+
+def employeedashboard(req):
+   if 'emp_id' in req.session:
+      eid = req.session.get('emp_id')
+      emp_data = Employee.objects.get(id=eid)
+      return render(req,'employeedashboard.html',{'data':emp_data})
+   return redirect(login)
 
 
 def admindashboard(req):
    if 'a_data' in req.session:
       a_data = req.session.get('a_data')
       return render(req,'admindashboard.html',{'data':a_data})
-
+   return redirect('login')
 
 def add_dept(req):
    if 'a_data'in req.session:
@@ -138,7 +152,7 @@ def save_emp(req):
          ec = req.POST.get('emp_contact')
          ed = req.POST.get('emp_dept')
          ecode = req.POST.get('emp_code')
-         ei = req.POST.get('emp_image')
+         ei = req.FILES.get('emp_image')
          emp = Employee.objects.filter(Email=ee)
          if emp:
             messages.warning(req,'email already exist')
@@ -166,7 +180,28 @@ def show_emp(req):
       return render(req,'admindashboard.html',{'data':a_data, 'show_emp':True,'all_emp':all_emp})
    else:
       return redirect('login')
-   
+
+
+def profile(req):
+   if 'emp_id' in req.session:
+      eid = req.session.get('emp_id')
+      emp_data = Employee.objects.get(id=eid)
+      return render(req,'employeedashboard.html',{'data':emp_data , 'profile':True})
+   return redirect('login')
+
+def setting(req):
+   if 'emp_id' in req.session:
+      eid = req.session.get('emp_id')
+      emp_data = Employee.objects.get(id=eid)
+      return render(req,'employeedashboard.html',{'data':emp_data , 'setting':True})
+   return redirect('login')
+
+def Query(req):
+   if 'emp_id' in req.session:
+      eid = req.session.get('emp_id')
+      emp_data = Employee.objects.get(id=eid)
+      return render(req,'employeedashboard.html',{'data':emp_data , 'Query':True})
+   return redirect('login')
 
 def logout(req):
    if 'user_id' in req.session:
