@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,10 +55,22 @@
 <body>
 
 
-<nav class="navbar navbar-dark bg-dark px-4">
-  <span class="navbar-brand">Welcome Admin</span>
-  <a href="{% url 'logout' %}"><button class="btn btn-danger">Logout</button></a>
-</nav>
+    <nav class="navbar navbar-dark bg-dark px-4 d-flex justify-content-between">
+      
+      <div class="d-flex align-items-center">
+          <!-- Admin Image -->
+          <img src="{% static 'Images/sharvan.webp' %}" alt="Admin"
+               class="rounded-circle me-3"
+               style="width:50px; height:50px; object-fit:cover; border:2px solid white;">
+          
+          <span class="navbar-brand mb-0">Welcome Admin</span>
+      </div>
+    
+      <a href="{% url 'logout' %}">
+          <button class="btn btn-danger">Logout</button>
+      </a>
+    
+    </nav>
 
 <div class="container-fluid">
   <div class="row">
@@ -70,7 +83,7 @@
       <a href="{% url 'show_dept' %}">Show Department</a>
       <a href="{% url 'add_emp' %}">Add Employee</a>
       <a href="{% url 'show_emp' %}">Show Employee</a>
-      <a href="#">Employee Query</a>
+      <a href="{% url 'emp_all_Query' %}">Employee Query</a>
     </div>
 
     
@@ -160,7 +173,6 @@
                                     </tr> 
                                     {% endfor %}
                                 </tbody>
-                                
                             </table>
                 </div>
             
@@ -229,7 +241,7 @@
                     </form>    
                 </div>
         {% elif show_emp %}
-                <div class="container mt-5">
+            <div class="container mt-5">
                     <div class="card shadow-lg border-0">
                         {% comment %} <div class=" d-flex justify-content-between align-items-center"> {% endcomment %}
                         <h4 class="">Employee List</h4>
@@ -268,8 +280,84 @@
                                 </tbody>
                                 
                             </table>
-                </div> 
-        {% endif %}
+                </div>
+        {% elif emp_all_Query %} 
+            <div class="container mt-5">
+                    <div class="card shadow-lg border-0">
+                        {% comment %} <div class=" d-flex justify-content-between align-items-center"> {% endcomment %}
+                        <h4 class="">Employee Query list</h4>
+                   </div> <br>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle">
+                        <thead class="table-dark text-center">
+                            <tr>
+                                <th>S.NO</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Department</th>
+                                <th>Query</th>
+                                <th>Status</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                                <th>Reply</th>
+                            </tr>
+                        </thead>
+                    <tbody>
+                                    
+                        {% for i in emp_all_Query %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.Name}}</td>
+                                <td>{{i.Email}}</td>
+                                <td>{{i.Dept}}</td>
+                                <td>{{i.Query}}</td>
+                                <td>{{i.Status}}</td>
+                                <td><a href=""><button>Edit</button></a></td>
+                                <td><a href=""><button>Delete</button></a></td>
+                                <td><a href="{% url 'reply' %}"><button>reply</button></a></td>
+                            </tr> 
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% elif reply %}
+                    <form action="{% url 'reply' %}" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-control" value="{{ data.name }}" readonly>
+                </div>
+    
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" value="{{ data.email }}" readonly>
+                </div>
+    
+                <div class="mb-3">
+                    <label class="form-label">Department</label>
+                    <input type="text" class="form-control" value="{{ data.dept }}" readonly>
+                </div>
+    
+                <div class="mb-3">
+                    <label class="form-label">Query</label>
+                    <textarea class="form-control" rows="3" readonly>{{ data.query }}</textarea>
+                </div>
+    
+                <div class="mb-3">
+                    <label class="form-label">Status</label>
+                    <input type="text" class="form-control" value="{{ data.status }}" readonly>
+                </div>
+    
+                <div class="mb-3">
+                    <label class="form-label">Reply</label>
+                    <textarea class="form-control" name='text' rows="3"></textarea>
+                </div> <br> <br>
+                <button type="submit" class="btn btn-success">OK</button>
+            </form> 
+            </div>      
+                
+    {% endif %}
+          
     </div>
 </div>         
 

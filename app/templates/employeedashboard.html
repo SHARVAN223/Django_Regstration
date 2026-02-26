@@ -54,9 +54,21 @@
 <body>
 
 
-<nav class="navbar navbar-dark bg-dark px-4">
-  <span class="navbar-brand">Welcome {{data.Name}}</span>
-  <a href="{% url 'logout' %}"><button class="btn btn-danger">Logout</button></a>
+<nav class="navbar navbar-dark bg-dark px-4 d-flex justify-content-between">
+      
+      <div class="d-flex align-items-center">
+          <!-- Admin Image -->
+          <img src="{{ data.Image.url }}" alt="Admin"
+               class="rounded-circle me-3"
+               style="width:50px; height:50px; object-fit:cover; border:2px solid white;">
+          
+          <span class="navbar-brand mb-0">Welcome {{data.Name}}</span>
+      </div>
+    
+      <a href="{% url 'logout' %}">
+          <button class="btn btn-danger">Logout</button>
+      </a>
+    
 </nav>
 
 <div class="container-fluid">
@@ -67,15 +79,19 @@
       <a href="{% url 'profile' %}">Profile</a>
       <a href="{% url 'setting' %}">Setting</a>
       <a href="{% url 'Query' %}">Query</a>
-      <a href="">All Query</a>
-      <a href="">Panding Query</a>
-      <a href="#">Done Query</a>
+      <a href="{% url 'all_Query' %}">All Query</a>
+      <a href="{% url 'pending_Query' %}">Pending Query</a>
+      <a href="{% url 'done_Query' %}">Done Query</a>
     </div> 
-    
-
+        
     <div class="col-md-9 col-lg-10 p-4">
       <div class="content-box">
-         
+
+        {% if messages %}
+            {% for i in messages %}
+                {{i}}
+            {% endfor %}    
+        {% endif %}
         {% if profile %}
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
             <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -308,16 +324,16 @@
                             </div>
                     
                             <!-- Edit Button -->
-                            <a href="#" class="btn btn-primary btn-edit">
+                            <a href="{% url 'edit' %} " class="btn btn-primary btn-edit">
                                 <i class="bi bi-pencil-square"></i> Edit Profile
                             </a>
                     
                             </div>
                         </div>
-        {% elif Query %}
-               <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+            {% elif Query %}
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-            <style>
+                <style>
                 body {
                     background: linear-gradient(to right, #eef2f3, #dfe9f3);
                     font-family: 'Segoe UI', sans-serif;
@@ -357,43 +373,47 @@
                     font-weight: 600;
                     margin-top: 15px;
                 }
-            </style>
-            
-        
-            <div class="form-wrapper">
+                </style>
+                <div class="form-wrapper">
                 <div class="query-card">
             
                     <h4 class="query-title">Employee Query Details</h4>
             
-                    <form>
+                    <form action="{% url 'querydata' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
                         
                         <div class="mb-3">
                             <label class="form-label">Name</label>
-                            <input type="text" class="form-control" value="{{ data.Name }}" readonly>
+                            <input type="text" class="form-control" name="name" value="{{ data.Name }}" readonly>
                         </div>
             
                         <div class="mb-3">
                             <label class="form-label">Email</label>
-                            <input type="email" class="form-control" value="{{ data.Email }}" readonly>
+                            <input type="email" class="form-control" name="email" value="{{ data.Email }}" readonly>
                         </div>
             
                         <div class="mb-3">
                             <label class="form-label">Employee ID</label>
-                            <input type="text" class="form-control" value="{{ data.Code }}" readonly>
+                            <input type="text" class="form-control" name="code" value="{{ data.Code }}" readonly>
                         </div>
             
                         <div class="mb-3">
                             <label class="form-label">Department</label>
-                            <input type="text" class="form-control" value="{{ data.Dept }}" readonly>
+                            <select name="Qdept" class="form-select" required>
+                                <option value="">-- Select Department --</option>
+                                {% for i in emp_dept %}
+                                <option >{{ i.Dep_n }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
             
                         <div class="mb-3">
                             <label class="form-label">Query</label>
-                            <textarea class="form-control" rows="4" >{{ data.Query }}</textarea>
+                            <textarea class="form-control" name="query" rows="4" >{{ data.Query }}</textarea>
                         </div>
             
                         <div class="d-grid">
-                            <button type="button" class="btn btn-primary btn-query">
+                            <button type="sumbit" class="btn btn-primary btn-query">
                                 Submit Query
                             </button>
                         </div>
@@ -401,9 +421,123 @@
                     </form>
             
                 </div>
-            </div>
-      {% endif %} 
-
+                </div>
+        {% elif all_Query %}
+                <div class="container mt-5">
+                    <div class="card shadow-lg border-0">
+                        {% comment %} <div class=" d-flex justify-content-between align-items-center"> {% endcomment %}
+                        <h4 class="">Employee Query list</h4>
+                   </div> <br>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered align-middle">
+                                <thead class="table-dark text-center">
+                                    <tr>
+                                        <th>S.NO</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Department</th>
+                                        <th>Query</th>
+                                        <th>Status</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th> 
+                                    </tr>
+                                </thead>
+                            <tbody>
+                                    
+                                {% for i in all_Query %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{i.Name}}</td>
+                                        <td>{{i.Email}}</td>
+                                        <td>{{i.Dept}}</td>
+                                        <td>{{i.Query}}</td>
+                                        <td>{{i.Status}}</td>
+                                        <td><a href=""><button>Edit</button></a></td>
+                                        <td><a href=""><button>Delete</button></a></td>
+                                    </tr> 
+                                {% endfor %}
+                            </tbody>
+                         </table>
+                </div>
+        {% elif pending_Query %}
+               <div class="container mt-5">
+                    <div class="card shadow-lg border-0">
+                        {% comment %} <div class=" d-flex justify-content-between align-items-center"> {% endcomment %}
+                        <h4 class="">Employee Panding Query list</h4>
+                   </div> <br>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered align-middle">
+                                <thead class="table-dark text-center">
+                                    <tr>
+                                        <th>S.NO</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Department</th>
+                                        <th>Query</th>
+                                        <th>Status</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th> 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    {% for i in pending_data %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{i.Name}}</td>
+                                        <td>{{i.Email}}</td>
+                                        <td>{{i.Dept}}</td>
+                                        <td>{{i.Query}}</td>
+                                        <td>{{i.Status}}</td>
+                                        <td><a href=""><button>Edit</button></a></td>
+                                        <td><a href=""><button>Delete</button></a></td>
+                                    </tr> 
+                                    {% endfor %}
+                                </tbody>
+                         </table>
+                </div>
+        {% elif done_Query %}
+                   <div class="container mt-5">
+                    <div class="card shadow-lg border-0">
+                        {% comment %} <div class=" d-flex justify-content-between align-items-center"> {% endcomment %}
+                        <h4 class="">Employee Panding Query list</h4>
+                   </div> <br>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered align-middle">
+                                <thead class="table-dark text-center">
+                                    <tr>
+                                        <th>S.NO</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Department</th>
+                                        <th>Query</th>
+                                        <th>Status</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th> 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    {% for i in d_Query %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{i.Name}}</td>
+                                        <td>{{i.Email}}</td>
+                                        <td>{{i.Dept}}</td>
+                                        <td>{{i.Query}}</td>
+                                        <td>{{i.Status}}</td>
+                                        <td><a href=""><button>Edit</button></a></td>
+                                        <td><a href=""><button>Delete</button></a></td>
+                                    </tr> 
+                                    {% endfor %}
+                                </tbody>
+                         </table>
+                </div>
+    {% endif %} 
+       
     </div>
 </div>         
 

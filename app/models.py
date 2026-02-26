@@ -16,3 +16,13 @@ class Department(models.Model):
     Dep_n= models.CharField(max_length=30)
     Dep_d= models.CharField(max_length=100)
     Dep_h=models.CharField(max_length=30)
+
+class EmpQuery(models.Model):
+    Name = models.CharField(max_length=50)
+    Email= models.EmailField()
+    Dept = models.CharField(max_length=40)
+    Query = models.TextField()
+    Status = models.CharField(default="pending")
+    Reply = models.TextField(null=True)
+
+   

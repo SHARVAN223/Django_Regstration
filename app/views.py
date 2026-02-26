@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from .models import Employee
 from .models import Department
+from .models import EmpQuery
 from django .contrib import messages
 from django.core.mail import send_mail
 
@@ -181,6 +182,24 @@ def show_emp(req):
    else:
       return redirect('login')
 
+def emp_all_Query(req):
+   if 'a_data'in req.session:
+      eid = req.session.get('emp_id')
+      emp_data = Employee.objects.get(id=eid)
+      emp_all_Query = EmpQuery.objects.all()
+      emp_dept = Department.objects.all()
+      return render(req,'admindashboard.html',{'data':emp_data , 'emp_all_Query':True, 'emp_all_Query':emp_all_Query, 'emp_dept':emp_dept})
+   return redirect('login')
+
+
+def reply(req):
+   if 'a_data' in req.session:
+      eid = req.session.get('emp_id')
+      emp_data = Employee.objects.get(id=eid)
+      emp_all_Query = EmpQuery.objects.all()
+      return render(req,'admindashboard.html',{'data':emp_data , 'reply':True, 'emp_all_Query':emp_all_Query,})
+   return redirect('login')
+
 
 def profile(req):
    if 'emp_id' in req.session:
@@ -200,8 +219,73 @@ def Query(req):
    if 'emp_id' in req.session:
       eid = req.session.get('emp_id')
       emp_data = Employee.objects.get(id=eid)
-      return render(req,'employeedashboard.html',{'data':emp_data , 'Query':True})
+      emp_dept = Department.objects.all()
+      return render(req,'employeedashboard.html',{'data':emp_data , 'Query':True,'emp_dept':emp_dept})
    return redirect('login')
+
+def edit(req):
+   return render(req,'edit.html')
+
+def reset(req):
+   if 'emp_id' in req.session:
+      if req.method == 'POST':
+         eid = req.session.get('emp_id')
+         image = req.FILES.get('img')
+         emp_data = Employee.objects.get(id=eid)
+         emp_data.Image = image
+         print(emp_data.Image)
+         emp_data.save()
+         print(emp_data.Image)
+         messages.success(req,'images change succesful')
+         return redirect('profile')
+      else:
+         return render(req,'edit.html')
+   return render(req,'login.html')
+
+def querydata(req):
+   if req.method == 'POST':
+      if 'emp_id' in req.session:
+         n = req.POST.get('name')
+         e = req.POST.get('email')
+         d = req.POST.get('Qdept')
+         q = req.POST.get('query')
+         EmpQuery.objects.create(Name=n,Email=e,Dept=d,Query=q)
+         messages.success(req,"Query Created")
+         eid = req.session.get('emp_id')
+         emp_data = Employee.objects.get(id=eid)
+         emp_dept = Department.objects.all()
+         return render(req,'employeedashboard.html',{'data':emp_data ,'Query':True,'emp_dept':emp_dept})
+      else:
+         return redirect('employeedashboard') 
+   return redirect('login') 
+   
+     
+
+def all_Query(req):
+   if 'emp_id' in req.session:
+      eid = req.session.get('emp_id')
+      emp_data = Employee.objects.get(id=eid)
+      all_Query = EmpQuery.objects.filter(Email=emp_data.Email)
+      return render(req,'employeedashboard.html',{'data':emp_data , 'all_Query':True, 'all_Query':all_Query,})
+   return redirect('login')
+
+def pending_Query(req):
+   if 'emp_id' in req.session:
+      eid = req.session.get('emp_id')
+      emp_data = Employee.objects.get(id=eid)
+      pending_data = EmpQuery.objects.filter(Email=emp_data.Email,Status="pending")
+      # all_Query = EmpQuery.objects.filter(Email=emp_data.Email)
+      return render(req,'employeedashboard.html',{'data':emp_data,'pending_Query':True, 'pending_data':pending_data})
+   return redirect('login')
+
+def done_Query(req):
+   if 'emp_id' in req.session:
+      eid = req.session.get('emp_id')
+      emp_data = Employee.objects.get(id=eid)
+      d_Query = EmpQuery.objects.filter(Email=emp_data.Email,Status="done")
+      return render(req,'employeedashboard.html',{'data':emp_data , 'done_Query':True, 'd_Query':d_Query})
+   return redirect('login')
+
 
 def logout(req):
    if 'user_id' in req.session:
