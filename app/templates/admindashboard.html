@@ -281,15 +281,33 @@
                                 
                             </table>
                 </div>
-        {% elif emp_all_Query %} 
+        {% elif emp_all_Query %}
+        
+           <div class="container mt-4">
+            <div class="card p-4 shadow">
+                <form method="POST" action="">
+                    <div class="mb-3">
+                        <input type="search" name="search" class="form-control" placeholder="Enter something to search">
+                    </div>
+        
+                    
+                    <div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            Submit
+                        </button>
+                    </div>
+        
+                </form>
+            </div>
+            </div>
             <div class="container mt-5">
                     <div class="card shadow-lg border-0">
                         {% comment %} <div class=" d-flex justify-content-between align-items-center"> {% endcomment %}
-                        <h4 class="">Employee Query list</h4>
+                        <h4 class="">Employee  all Query list</h4>
                    </div> <br>
                     <div class="card-body">
                         <div class="table-responsive">
-                <table class="table table-hover table-bordered align-middle">
+                    <table class="table table-hover table-bordered align-middle">
                         <thead class="table-dark text-center">
                             <tr>
                                 <th>S.NO</th>
@@ -298,10 +316,18 @@
                                 <th>Department</th>
                                 <th>Query</th>
                                 <th>Status</th>
-                                <th>Edit</th>
-                                <th>Delete</th>
                                 <th>Reply</th>
                             </tr>
+    
+                            <!-- <tr class="table-light">
+                                <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(0)" placeholder="Search"></th>
+                                <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(1)" placeholder="Search"></th>
+                                <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(2)" placeholder="Search"></th>
+                                <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(3)" placeholder="Search"></th>
+                                <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(4)" placeholder="Search"></th>
+                                <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(5)" placeholder="Search"></th>
+                                <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(6)" placeholder="Search"></th>
+                            </tr> -->
                         </thead>
                     <tbody>
                                     
@@ -312,50 +338,58 @@
                                 <td>{{i.Email}}</td>
                                 <td>{{i.Dept}}</td>
                                 <td>{{i.Query}}</td>
-                                <td>{{i.Status}}</td>
-                                <td><a href=""><button>Edit</button></a></td>
-                                <td><a href=""><button>Delete</button></a></td>
-                                <td><a href="{% url 'reply' %}"><button>reply</button></a></td>
+                                <td>
+                                    {% if i.Reply %}
+                                        Done
+                                    {% else %}
+                                        {{i.Status}}
+                                    {% endif %}   
+                                </td>
+                               
+                                <td>
+                                    {% if i.Reply %}
+                                        {{i.Reply}}
+                                    {% else %}
+                                        <a href="{% url 'reply' pk=i.id %}">Reply</a>
+                                    {% endif %}   
+                                </td>
                             </tr> 
                         {% endfor %}
                     </tbody>
-                </table>
-            {% elif reply %}
-                    <form action="{% url 'reply' %}" method="post">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label class="form-label">Name</label>
-                    <input type="text" class="form-control" value="{{ data.name }}" readonly>
-                </div>
-    
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-control" value="{{ data.email }}" readonly>
-                </div>
-    
-                <div class="mb-3">
-                    <label class="form-label">Department</label>
-                    <input type="text" class="form-control" value="{{ data.dept }}" readonly>
-                </div>
-    
-                <div class="mb-3">
-                    <label class="form-label">Query</label>
-                    <textarea class="form-control" rows="3" readonly>{{ data.query }}</textarea>
-                </div>
-    
-                <div class="mb-3">
-                    <label class="form-label">Status</label>
-                    <input type="text" class="form-control" value="{{ data.status }}" readonly>
-                </div>
-    
-                <div class="mb-3">
-                    <label class="form-label">Reply</label>
-                    <textarea class="form-control" name='text' rows="3"></textarea>
-                </div> <br> <br>
-                <button type="submit" class="btn btn-success">OK</button>
-            </form> 
-            </div>      
+                </table> 
                 
+                {% if q_data %}
+                    <form action="{% url 'a_reply' pk=q_data.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" value="{{ q_data.Name }}" readonly>
+                        </div>
+            
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" value="{{ q_data.Email }}" readonly>
+                        </div>
+            
+                        <div class="mb-3">
+                            <label class="form-label">Department</label>
+                            <input type="text" class="form-control" value="{{ q_data.Dept }}" readonly>
+                        </div>
+            
+                        <div class="mb-3">
+                            <label class="form-label">Query</label>
+                            <textarea class="form-control" rows="3" name='query' readonly>{{ q_data.Query }}</textarea>
+                        </div>
+            
+                        <div class="mb-3">
+                            <label class="form-label">Reply</label>
+                            <textarea class="form-control" name='reply' rows="3" required></textarea>
+                        </div> <br> <br>
+                        <button type="submit" class="btn btn-success">Submit Query</button>
+                        <a href="{% url 'cancel' %}"> <button type="submit" class="btn btn-success">Cancel</button></a>
+                    </form>      
+                {% endif %}
+                      
     {% endif %}
           
     </div>

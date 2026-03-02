@@ -422,7 +422,12 @@
             
                 </div>
                 </div>
-        {% elif all_Query %}
+        {% elif all_Query %} 
+               {% if messages %}
+                    {% for i in messages %}
+                        {{i}}
+                    {% endfor %}    
+                {% endif %}
                 <div class="container mt-5">
                     <div class="card shadow-lg border-0">
                         {% comment %} <div class=" d-flex justify-content-between align-items-center"> {% endcomment %}
@@ -440,7 +445,20 @@
                                         <th>Query</th>
                                         <th>Status</th>
                                         <th>Edit</th>
-                                        <th>Delete</th> 
+                                        <th>Delete</th>
+                                        <th>Reply</th>
+                                    </tr>
+
+                                    <tr class="table-light">
+                                        <th><input type="Search" class="form-control form-control-sm" onkeyup="searchTable(0)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(1)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(2)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(3)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(4)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(5)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(6)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(7)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(8)" placeholder="Search"></th> 
                                     </tr>
                                 </thead>
                             <tbody>
@@ -452,14 +470,45 @@
                                         <td>{{i.Email}}</td>
                                         <td>{{i.Dept}}</td>
                                         <td>{{i.Query}}</td>
-                                        <td>{{i.Status}}</td>
-                                        <td><a href=""><button>Edit</button></a></td>
-                                        <td><a href=""><button>Delete</button></a></td>
+                                        <td>
+                                            {% if i.Reply %}
+                                                Done
+                                            {% else %}
+                                                {{i.Status}}
+                                            {% endif %}   
+                                       </td>
+                                        <td>
+                                             {% if i.Reply %}
+                                                NA
+                                            {% else %}
+                                                <a href="{% url 'emp_edit' pk=i.id %}">Edit</a>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                             {% if i.Reply %}
+                                                NA
+                                            {% else %}
+                                                <a href="{% url 'delete' pk=i.id %}">Delete</a>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{i.Reply}}</td>
                                     </tr> 
                                 {% endfor %}
                             </tbody>
-                         </table>
+                        </table>
+                        {% if edit_data %}
+                            <form action="{% url 'update' pk=edit_data.id %}" method="post">
+                                {% csrf_token %}
+                                Name: <input type="text" name="name" value="{{edit_data.Name}}"><br><br>
+                                Email: <input type="email" name="email" value="{{edit_data.Email}}" readonly><br><br>
+                                Department: <input type="text" name="dept" value="{{edit_data.Dept}}" readonly><br><br>
+                                Query: <input type="text" name="query" value="{{edit_data.Query}}"><br><br>
+                                Status: <input type="text" name="status" value="{{edit_data.Status}}" readonly><br><br>
+                                <button type="submit">Update</button>
+                            </form>
+                            {% endif %}
                 </div>
+            
         {% elif pending_Query %}
                <div class="container mt-5">
                     <div class="card shadow-lg border-0">
@@ -480,6 +529,19 @@
                                         <th>Edit</th>
                                         <th>Delete</th> 
                                     </tr>
+
+                                    <tr class="table-light">
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(0)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(1)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(2)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(3)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(4)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(5)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(6)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(7)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(8)" placeholder="Search"></th> 
+                                    </tr>
+
                                 </thead>
                                 <tbody>
                                     
@@ -492,7 +554,7 @@
                                         <td>{{i.Query}}</td>
                                         <td>{{i.Status}}</td>
                                         <td><a href=""><button>Edit</button></a></td>
-                                        <td><a href=""><button>Delete</button></a></td>
+                                        <td><a href="{% url 'delete' pk=i.id %}">Delete</a></td>
                                     </tr> 
                                     {% endfor %}
                                 </tbody>
@@ -516,8 +578,22 @@
                                         <th>Query</th>
                                         <th>Status</th>
                                         <th>Edit</th>
-                                        <th>Delete</th> 
+                                        <th>Delete</th>
+                                        <th>Reply</th> 
                                     </tr>
+
+                                    <tr class="table-light">
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(0)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(1)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(2)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(3)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(4)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(5)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(6)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(7)" placeholder="Search"></th>
+                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(8)" placeholder="Search"></th> 
+                                    </tr>
+
                                 </thead>
                                 <tbody>
                                     
@@ -529,8 +605,21 @@
                                         <td>{{i.Dept}}</td>
                                         <td>{{i.Query}}</td>
                                         <td>{{i.Status}}</td>
-                                        <td><a href=""><button>Edit</button></a></td>
-                                        <td><a href=""><button>Delete</button></a></td>
+                                         <td>
+                                             {% if i.Reply %}
+                                                NA
+                                            {% else %}
+                                                Edit
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                             {% if i.Reply %}
+                                                NA
+                                            {% else %}
+                                                Delete
+                                            {% endif %}
+                                        </td>
+                                        <td>{{i.Reply}}</td>
                                     </tr> 
                                     {% endfor %}
                                 </tbody>
