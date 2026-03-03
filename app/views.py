@@ -330,14 +330,16 @@ def search(req):
       eid = req.session.get('emp_id')
       emp_data = Employee.objects.get(id=eid)
       if req.method == 'POST':
-         s= req.POST.get('search')
+         s = req.POST.get('search')
+         print(s)
          # all_Query = EmpQuery.objects.filter(Email=emp_data.Email,Query=s, Dept=s)
-         all_Query = EmpQuery.objects.filter(Email=emp_data.Email,Query=s)
-         # all_Query = EmpQuery.objects.filter(Email__contains=emp_data.Email,Query__icontains=s)
-      return render(req,'employeedashboard.html',{'data':emp_data,'all_Query':all_Query,})
-   return redirect('login')
+         # all_Query = EmpQuery.objects.filter(Email=emp_data.Email, Query=s)
+         all_Query = EmpQuery.objects.filter(Email__contains=emp_data.Email,Query__icontains=s)
+      return render(req,'employeedashboard.html',{'data':emp_data,'all_Query':all_Query})
+   return redirect('login') 
 
-        
+def reset(req):
+   return redirect('all_Query') 
       
 
 def delete(req, pk):

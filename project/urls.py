@@ -51,6 +51,7 @@ urlpatterns = [
     path('emp_edit/<int:pk>/',emp_edit,name='emp_edit'),
     path('update/<int:pk>/',update,name='update'),
     path('search/',search,name='search'),
+    path('reset/',reset,name='reset'),
     path('delete/<int:pk>/',delete,name='delete'),
     path('logout/',logout,name='logout'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

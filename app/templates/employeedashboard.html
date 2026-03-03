@@ -428,6 +428,22 @@
                         {{i}}
                     {% endfor %}    
                 {% endif %}
+                <div class="container mt-4">
+                <div class="card p-4 shadow">
+                <form method="post" action="{% url 'search' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <input type="search" name="search" class="form-control" placeholder="Enter something to search">
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            Submit
+                        </button>
+                        <a href="{% url 'reset' %}">reset</a>
+                    </div>
+                </form>
+                </div>
+                </div>
                 <div class="container mt-5">
                     <div class="card shadow-lg border-0">
                         {% comment %} <div class=" d-flex justify-content-between align-items-center"> {% endcomment %}
