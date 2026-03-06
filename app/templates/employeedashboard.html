@@ -89,8 +89,10 @@
 
         {% if messages %}
             {% for i in messages %}
-                {{i}}
-            {% endfor %}    
+            <div class="alert alert-{{ i.tags }} alert-dismissible fade show" role="alert">
+                {{ i }}
+            </div>
+        {% endfor %}  
         {% endif %}
         {% if profile %}
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -212,7 +214,7 @@
                     </div>
                 </div>
         {% elif setting %}
-                  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
                     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
         
                     <style>
@@ -324,15 +326,15 @@
                             </div>
                     
                             <!-- Edit Button -->
-                            <a href="{% url 'edit' %} " class="btn btn-primary btn-edit">
+                            <a href="{% url 'edit' %}" class="btn btn-primary btn-edit">
                                 <i class="bi bi-pencil-square"></i> Edit Profile
                             </a>
                     
                             </div>
                         </div>
-            {% elif Query %}
+        
+        {% elif Query %}
                 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
                 <style>
                 body {
                     background: linear-gradient(to right, #eef2f3, #dfe9f3);
@@ -422,24 +424,20 @@
             
                 </div>
                 </div>
-        {% elif all_Query %} 
-               {% if messages %}
-                    {% for i in messages %}
-                        {{i}}
-                    {% endfor %}    
-                {% endif %}
+        {% elif all_q %} 
                 <div class="container mt-4">
                 <div class="card p-4 shadow">
                 <form method="post" action="{% url 'search' %}">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <input type="search" name="search" class="form-control" placeholder="Enter something to search">
+                        <input type="search" name="search" class="form-control" value="{{s}}">
                     </div>
                     <div>
                         <button type="submit" class="btn btn-primary w-100">
                             Submit
                         </button>
                         <a href="{% url 'reset' %}">reset</a>
+                        <a href="{% url 'all_Query' %}">resetA</a>
                     </div>
                 </form>
                 </div>

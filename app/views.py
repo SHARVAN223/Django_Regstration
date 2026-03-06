@@ -279,7 +279,7 @@ def all_Query(req):
       eid = req.session.get('emp_id')
       emp_data = Employee.objects.get(id=eid)
       all_Query = EmpQuery.objects.filter(Email=emp_data.Email)
-      return render(req,'employeedashboard.html',{'data':emp_data , 'all_Query':True, 'all_Query':all_Query,})
+      return render(req,'employeedashboard.html',{'data':emp_data , 'all_q':True, 'all_Query':all_Query,})
    return redirect('login')
 
 def pending_Query(req):
@@ -325,6 +325,8 @@ def update(req,pk):
       return render(req,'employeedashboard.html',{'data':emp_data,'all_Query':all_Query})
    return redirect('login')
 
+
+from django.db.models import Q
 def search(req):
    if 'emp_id' in req.session:
       eid = req.session.get('emp_id')
@@ -334,8 +336,11 @@ def search(req):
          print(s)
          # all_Query = EmpQuery.objects.filter(Email=emp_data.Email,Query=s, Dept=s)
          # all_Query = EmpQuery.objects.filter(Email=emp_data.Email, Query=s)
-         all_Query = EmpQuery.objects.filter(Email__contains=emp_data.Email,Query__icontains=s)
-      return render(req,'employeedashboard.html',{'data':emp_data,'all_Query':all_Query})
+         # all_Query = EmpQuery.objects.filter(Email__contains=emp_data.Email,Query__icontains=s)
+         # all_Query = EmpQuery.objects.filter(Email=emp_data.Email,Query__icontains=s,Dept__icontains=s)
+         all_Query = EmpQuery.objects.filter(Email=emp_data.Email).filter (Q(Query__icontains=s)| (Q(Dept__icontains=s)))
+
+      return render(req,'employeedashboard.html',{'data':emp_data,'all_Query':all_Query, 'all_q':True, 's':s})
    return redirect('login') 
 
 def reset(req):
