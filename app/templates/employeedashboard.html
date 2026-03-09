@@ -425,90 +425,89 @@
                 </div>
                 </div>
         {% elif all_q %} 
-                <div class="container mt-4">
-                <div class="card p-4 shadow">
-                <form method="post" action="{% url 'search' %}">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <input type="search" name="search" class="form-control" value="{{s}}">
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-primary w-100">
-                            Submit
-                        </button>
-                        <a href="{% url 'reset' %}">reset</a>
-                        <a href="{% url 'all_Query' %}">resetA</a>
-                    </div>
-                </form>
+            <div class="container mt-4">
+            <div class="card p-4 shadow">
+            <form method="post" action="{% url 'search' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <input type="search" name="search" class="form-control" value="{{s}}">
                 </div>
+                <div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        Submit
+                    </button>
+                    <a href="{% url 'reset' %}">reset</a>
+                    <a href="{% url 'all_Query' %}">resetA</a>
                 </div>
-                <div class="container mt-5">
-                    <div class="card shadow-lg border-0">
-                        {% comment %} <div class=" d-flex justify-content-between align-items-center"> {% endcomment %}
-                        <h4 class="">Employee Query list</h4>
-                   </div> <br>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover table-bordered align-middle">
-                                <thead class="table-dark text-center">
-                                    <tr>
-                                        <th>S.NO</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Department</th>
-                                        <th>Query</th>
-                                        <th>Status</th>
-                                        <th>Edit</th>
-                                        <th>Delete</th>
-                                        <th>Reply</th>
-                                    </tr>
-
-                                    <tr class="table-light">
-                                        <th><input type="Search" class="form-control form-control-sm" onkeyup="searchTable(0)" placeholder="Search"></th>
-                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(1)" placeholder="Search"></th>
-                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(2)" placeholder="Search"></th>
-                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(3)" placeholder="Search"></th>
-                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(4)" placeholder="Search"></th>
-                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(5)" placeholder="Search"></th>
-                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(6)" placeholder="Search"></th>
-                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(7)" placeholder="Search"></th>
-                                        <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(8)" placeholder="Search"></th> 
-                                    </tr>
-                                </thead>
-                            <tbody>
-                                    
-                                {% for i in all_Query %}
-                                    <tr>
-                                        <td>{{forloop.counter}}</td>
-                                        <td>{{i.Name}}</td>
-                                        <td>{{i.Email}}</td>
-                                        <td>{{i.Dept}}</td>
-                                        <td>{{i.Query}}</td>
-                                        <td>
-                                            {% if i.Reply %}
-                                                Done
-                                            {% else %}
-                                                {{i.Status}}
-                                            {% endif %}   
-                                       </td>
-                                        <td>
-                                             {% if i.Reply %}
-                                                NA
-                                            {% else %}
-                                                <a href="{% url 'emp_edit' pk=i.id %}">Edit</a>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                             {% if i.Reply %}
-                                                NA
-                                            {% else %}
-                                                <a href="{% url 'delete' pk=i.id %}">Delete</a>
-                                            {% endif %}
-                                        </td>
-                                        <td>{{i.Reply}}</td>
-                                    </tr> 
-                                {% endfor %}
-                            </tbody>
+            </form>
+            </div>
+            </div>
+            <div class="container mt-5">
+                <div class="card shadow-lg border-0">
+                    {% comment %} <div class=" d-flex justify-content-between align-items-center"> {% endcomment %}
+                    <h4 class="">Employee Query list</h4>
+               </div> <br>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered align-middle">
+                            <thead class="table-dark text-center">
+                                <tr>
+                                    <th>S.NO</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Department</th>
+                                    <th>Query</th>
+                                    <th>Status</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                    <th>Reply</th>
+                                </tr>
+                                <tr class="table-light">
+                                    <th><input type="Search" class="form-control form-control-sm" onkeyup="searchTable(0)" placeholder="Search"></th>
+                                    <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(1)" placeholder="Search"></th>
+                                    <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(2)" placeholder="Search"></th>
+                                    <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(3)" placeholder="Search"></th>
+                                    <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(4)" placeholder="Search"></th>
+                                    <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(5)" placeholder="Search"></th>
+                                    <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(6)" placeholder="Search"></th>
+                                    <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(7)" placeholder="Search"></th>
+                                    <th><input type="text" class="form-control form-control-sm" onkeyup="searchTable(8)" placeholder="Search"></th> 
+                                </tr>
+                            </thead>
+                        <tbody>
+                                
+                            {% for i in all_Query %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{i.Name}}</td>
+                                    <td>{{i.Email}}</td>
+                                    <td>{{i.Dept}}</td>
+                                    <td>{{i.Query}}</td>
+                                    <td>
+                                        {% if i.Reply %}
+                                            Done
+                                        {% else %}
+                                            {{i.Status}}
+                                        {% endif %}   
+                                   </td>
+                                    <td>
+                                         {% if i.Reply %}
+                                            NA
+                                        {% else %}
+                                            <a href="{% url 'emp_edit' pk=i.id %}">Edit</a>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                         {% if i.Reply %}
+                                            NA
+                                        {% else %}
+                                            <a href="{% url 'delete' pk=i.id %}">Delete</a>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{i.Reply}}</td>
+                                </tr> 
+                            {% endfor %}
+                        </tbody>
                         </table>
                         {% if edit_data %}
                             <form action="{% url 'update' pk=edit_data.id %}" method="post">
@@ -520,7 +519,7 @@
                                 Status: <input type="text" name="status" value="{{edit_data.Status}}" readonly><br><br>
                                 <button type="submit">Update</button>
                             </form>
-                            {% endif %}
+                        {% endif %}
                 </div>
             
         {% elif pending_Query %}

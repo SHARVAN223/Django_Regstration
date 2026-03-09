@@ -25,4 +25,16 @@ class EmpQuery(models.Model):
     Status = models.CharField(default="pending")
     Reply = models.TextField(null=True)
 
+class Item(models.Model):
+    item_name = models.CharField(max_length=50)
+    item_desc = models.CharField(max_length=50)
+    item_price = models.CharField(max_length=50)
+    item_image = models.ImageField()
+    item_color = models.CharField(max_length=30)
+    item_categery = models.CharField(max_length=50)
+    item_quantity = models.CharField(max_length=50)
+    
+
+
+
    

@@ -77,13 +77,14 @@
 
     <!-- Sidebar -->
     <div class="col-md-3 col-lg-2 sidebar p-3">
-      
-
       <a href="{% url 'add_dept' %}">Add Department</a>
       <a href="{% url 'show_dept' %}">Show Department</a>
       <a href="{% url 'add_emp' %}">Add Employee</a>
       <a href="{% url 'show_emp' %}">Show Employee</a>
       <a href="{% url 'emp_all_Query' %}">Employee Query</a>
+      <a href="{% url 'item' %}">Add item </a>
+      <a href="{% url 'show_items' %}">Show item </a>
+
     </div>
 
     
@@ -93,8 +94,10 @@
         
         {% if messages %}
             {% for i in messages %}
-                {{i}}
-            {% endfor %}    
+            <div class="alert alert-{{ i.tags }} alert-dismissible fade show" role="alert">
+                {{ i }}
+            </div>
+        {% endfor %}  
         {% endif %}
         {% if add_dep %}
                 <div class="container mt-5">
@@ -372,8 +375,55 @@
                         <button type="submit" class="btn btn-success">Submit Query</button>
                         <a href="{% url 'cancel' %}"> <button type="submit" class="btn btn-success">Cancel</button></a>
                     </form>      
-                {% endif %}
-                      
+                    {% endif %}
+        
+        {% elif item %}
+            <h1>add item</h1>
+             <form action="{% url 'item' %}" method="post" enctype="multipart/form-data">
+                 {% csrf_token %}
+             
+                 <label>Item Name</label>
+                 <input type="text" name="name" class="form-control"><br>
+             
+                 <label>Item Description</label>
+                 <input type="text" name="desc" class="form-control"><br>
+             
+                 <label>Item Price</label>
+                 <input type="text" name="item_price" class="form-control"><br>
+             
+                 <label>Item Image</label>
+                 <input type="file" name="item_image" class="form-control"><br>
+             
+                 <label>Item Color</label>
+                 <input type="text" name="item_color" class="form-control"><br>
+             
+                 <label>Item Category</label>
+                 <select name="item_categery" class="form-control">
+                     <option value="">Select Category</option>
+                     <option value="male">Male</option>
+                     <option value="female">Female</option>
+                     <option value="kids">Kids</option>
+                     <option value="other">Other</option>
+                 </select><br>
+             
+                 <label>Item Quantity</label>
+                 <input type="text" name="item_quantity" class="form-control"><br>
+             
+                 <button type="submit" class="btn btn-primary">Add_item</button>
+             </form>
+        {% elif show_item %}
+            
+            {% for i in all_items %}
+                <div class="card" style="width: 18rem;">
+                    <img src="{{i.item_image.url}}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                </div>
+            {% endfor %}
+                
+            
+              
     {% endif %}
           
     </div>

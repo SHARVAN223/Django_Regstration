@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from .models import Employee
 from .models import Department
-from .models import EmpQuery
+from .models import EmpQuery, Item
 from django .contrib import messages
 from django.core.mail import send_mail
 
@@ -189,6 +189,42 @@ def emp_all_Query(req):
       return render(req,'admindashboard.html',{'data':a_data , 'emp_all_Query':True, 'emp_all_Query':emp_all_Query})
    return redirect('login')
 
+def item(req):
+   if 'a_data' in req.session:
+
+        if req.method == 'POST':
+            ina = req.POST.get('name')
+            id = req.POST.get('desc')
+            ip = req.POST.get('item_price')
+            im = req.FILES.get('item_image')   
+            ic = req.POST.get('item_color')
+            icate = req.POST.get('item_categery')
+            iq = req.POST.get('item_quantity')
+
+            Item.objects.create(
+               item_name=ina,
+               item_desc=id,
+               item_price=ip,
+               item_image=im,
+               item_color=ic,
+               item_categery=icate,
+               item_quantity=iq
+            )
+
+            messages.success(req, "Item create")
+        a_data = req.session.get('a_data')
+        return render(req, 'admindashboard.html', {'data': a_data, 'item': True})
+   else:
+      return redirect('login')
+
+   
+def show_items(req):
+   if 'a_data' in req.session:
+      a_data = req.session.get('a_data')
+      all_item = Item.objects.all()
+      return render(req,'admindashboard.html',{'data':a_data, 'all_item':all_item, 'show_item':True})
+   return redirect('login')
+
 
 def reply(req,pk):
    if 'a_data' in req.session:
@@ -339,9 +375,14 @@ def search(req):
          # all_Query = EmpQuery.objects.filter(Email__contains=emp_data.Email,Query__icontains=s)
          # all_Query = EmpQuery.objects.filter(Email=emp_data.Email,Query__icontains=s,Dept__icontains=s)
          all_Query = EmpQuery.objects.filter(Email=emp_data.Email).filter (Q(Query__icontains=s)| (Q(Dept__icontains=s)))
-
+         # all_Query = EmpQuery.objects.filter(Email__contains=emp_data.Email,Query__startswith=s)
+         # all_Query = EmpQuery.objects.filter(Email__contains=emp_data.Email,Query__istartswith=s)
+         # all_Query = EmpQuery.objects.filter(Email__contains=emp_data.Email,Query__endswith=s)
+         # all_Query = EmpQuery.objects.filter(Email__contains=emp_data.Email,Query__iendswith=s)
       return render(req,'employeedashboard.html',{'data':emp_data,'all_Query':all_Query, 'all_q':True, 's':s})
    return redirect('login') 
+
+
 
 def reset(req):
    return redirect('all_Query') 
