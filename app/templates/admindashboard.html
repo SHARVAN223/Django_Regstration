@@ -412,18 +412,28 @@
                  <button type="submit" class="btn btn-primary">Add_item</button>
              </form>
         {% elif show_item %}
-            
+            <h2> item list </h2>
             {% for i in all_items %}
-                <div class="card" style="width: 18rem;">
+                <div style="display:inline-block; margin:10px;">
+                <div class="card" style="width:18rem;">
                     <img src="{{i.item_image.url}}" class="card-img-top" alt="...">
                     <div class="card-body">
-                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <h5 class="card-tittle">{{i.item_name}}</h5> 
+                        <hr>
+                        <p class="card-text">{{i.item_desc}}</p>
+                        <hr>
+                        <p class="card-text">{{i.item_price}}</p>
+                        <hr>
+                        <p class="card-text">{{i.item_color}}</p>
+                        <hr>
+                        <p class="card-text">{{i.item_categery}}</p>
+                        <hr>
+                        <p class="card-text">{{i.item_quantity}}</p>
                     </div>
                 </div>
+                </div>
             {% endfor %}
-                
-            
-              
+                    
     {% endif %}
           
     </div>
